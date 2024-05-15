@@ -68,10 +68,10 @@ def update_input_container(selected_statistics):
         return True
 
 #Callback for plotting
-# Define the callback function to update the input container based on the selected statistics
+# Define the callback function to update the input container based on the selected statistics 
 @app.callback(
     Output(component_id='output-container', component_property='children'),
-    [Input(component_id='select-year', component_property='value'), Input(component_id='dropdown-statistics', component_property='value')])
+    [Input(component_id='dropdown-statistics', component_property='value'), Input(component_id='select-year', component_property='value')])
 
 
 def update_output_container(selected_statistics, input_year):
@@ -107,10 +107,16 @@ def update_output_container(selected_statistics, input_year):
     )
 
 # Plot 4 bar chart for the effect of unemployment rate on vehicle type and sales
+        unemp_data= recession_data.groupby(['unemployment_rate', 'Vehicle_Type'])['Automobile_Sales'].mean().reset_index()
         R_chart4 = dcc.Graph(
-            figure=px.bar(recession_data,x="unemployment_rate",y="Automobile_Sales",color="Vehicle_Type",
-            title="Effect of Unemployment Rate on Vehicle Sales by Type")
-        )
+                    figure=px.bar(
+                    unemp_data,
+                    x='unemployment_rate',
+                    y='Automobile_Sales',
+                    color='Vehicle_Type',
+                    labels={'unemployment_rate': 'Unemployment Rate', 'Automobile_Sales': 'Average Automobile Sales'},
+                    title="Effect of Unemployment Rate on Sales of various Vehicle Types")
+                    )
 
 
         return [
@@ -152,4 +158,3 @@ def update_output_container(selected_statistics, input_year):
 # Run the Dash app
 if __name__ == '__main__':
     app.run_server(debug=True)
-
